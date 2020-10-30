@@ -39,9 +39,9 @@ dependencies {
         transitive = true
     }
 
-    implementation 'com.vungle:publisher-sdk-android:6.7.1'
+    implementation 'com.vungle:publisher-sdk-android:6.8.1'
 
-    implementation 'com.mopub.mediation:vungle:6.7.1.0'
+    implementation 'com.mopub.mediation:vungle:6.8.1.0'
 
 
 }
