@@ -2,7 +2,7 @@
     <string name="app_name">MopubVungleAndroid</string>
     <string name="ad_unit_id">Your_ad_unit_id</string>
     <string name="interstitial_placement_id">Your_interstitial_placement_id</string>
-    <string name="reward_placement_id">Your_reward_placement_id</string>
+    <string name="reward_placement_id">0a9625a0127146c49274ed5b72b501e4</string>
     <string name="mrec_placement_id">Your_mrec_placement_id</string>
     <string name="banner_placement_id">Your_banner_placement_id</string>
     <string name="short_banner_placement_id">Your_banner_placement_id</string>

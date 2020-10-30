@@ -16,6 +16,8 @@ import com.mopub.common.MoPubReward;
 import com.mopub.common.SdkConfiguration;
 import com.mopub.common.SdkInitializationListener;
 import com.mopub.common.logging.MoPubLog;
+import com.mopub.common.privacy.ConsentDialogListener;
+import com.mopub.common.privacy.PersonalInfoManager;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubRewardedVideoListener;
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         context = MainActivity.this;
         MoPub.onCreate(this);
         initView();
+
     }
 
     public void initView() {
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void init() {
         Map<String, String> vungleSettings = new HashMap<>();
 //        vungleSettings.put("VNG_DEVICE_ID_OPT_OUT", "true");
-        vungleSettings.put("appId", "56e0df40945f181a3c000012");
+        vungleSettings.put("appId", "5df0a46e2b8ae90011798d50");
 //        vungleSettings.put("VNG_MIN_SPACE_INIT", "99999999999");
 //        vungleSettings.put("VNG_MIN_SPACE_LOAD_AD", "99999999999");
 
@@ -90,6 +93,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onInitializationFinished() {
                 Log.d(TAG,"onInitializationFinished");
+                PersonalInfoManager mPersonalInfoManager = MoPub.getPersonalInformationManager();
+                mPersonalInfoManager.forceGdprApplies();
+                Log.d(TAG,"mPersonalInfoManager.shouldShowConsentDialog()     "+mPersonalInfoManager.shouldShowConsentDialog());
+
+                if(mPersonalInfoManager.shouldShowConsentDialog()){
+                    mPersonalInfoManager.loadConsentDialog(new ConsentDialogListener() {
+                        @Override
+                        public void onConsentDialogLoaded() {
+                            Log.d(TAG,"onConsentDialogLoaded()     ");
+                            if (mPersonalInfoManager != null) {
+                                mPersonalInfoManager.showConsentDialog();
+                            }
+                        }
+
+                        @Override
+                        public void onConsentDialogLoadFailed(@NonNull MoPubErrorCode moPubErrorCode) {
+                            Log.d(TAG,"onConsentDialogLoadFailed()     "+moPubErrorCode);
+
+                        }
+                    });
+                }
             }
         });
 
