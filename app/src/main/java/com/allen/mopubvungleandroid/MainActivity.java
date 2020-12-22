@@ -23,7 +23,12 @@ import com.mopub.mobileads.MoPubRewardedVideos;
 import com.mopub.mobileads.MoPubView;
 import com.mopub.mobileads.VungleAdapterConfiguration;
 import com.mopub.mobileads.VungleMediationConfiguration;
+import com.mopub.mobileads.VungleRouter;
 import com.vungle.warren.AdConfig;
+import com.vungle.warren.InitCallback;
+import com.vungle.warren.Vungle;
+import com.vungle.warren.VungleSettings;
+import com.vungle.warren.error.VungleException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,31 +79,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void init() {
-        Map<String, String> vungleSettings = new HashMap<>();
-//        vungleSettings.put("VNG_DEVICE_ID_OPT_OUT", "true");
-        vungleSettings.put("appId", "56e0df40945f181a3c000012");
-//        vungleSettings.put("VNG_MIN_SPACE_INIT", "99999999999");
-//        vungleSettings.put("VNG_MIN_SPACE_LOAD_AD", "99999999999");
+        final Map<String, String> configuration = new HashMap<>();
+//        configuration.put("VNG_MIN_SPACE_INIT",50);
+//        configuration.put("VNG_MIN_SPACE_LOAD_AD",50);
+//        configuration.put("VNG_DEVICE_ID_OPT_OUT", false);
 
-        SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(rewardPlacementId)
-                .withMediatedNetworkConfiguration(VungleAdapterConfiguration.class.getName(), vungleSettings)
-                .withLogLevel(MoPubLog.LogLevel.DEBUG)
-                .withLegitimateInterestAllowed(false)
-                .build();
+        VungleRouter vungleRouter = VungleRouter.getInstance();
+//Optional: GDPR configure Vungle.Consent.OPTED_IN or Vungle.Consent.OPTED_OUT
+        vungleRouter.updateConsentStatus(Vungle.Consent.OPTED_IN);
 
-        MoPub.initializeSdk(this, sdkConfiguration, new SdkInitializationListener() {
+        VungleSettings vungleSettings = vungleRouter.applyVungleNetworkSettings(configuration);
+        Vungle.init("YOUR_VUNGLE_APP_ID", getApplicationContext(), new InitCallback() {
             @Override
-            public void onInitializationFinished() {
-                Log.d(TAG,"onInitializationFinished");
+            public void onSuccess() {
+                // Initialization has succeeded and SDK is ready to load an ad or play one if there
+                // is one pre-cached already
+                SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder("YOUR_MOPUB_ADUNIT_ID")
+                        .withMediatedNetworkConfiguration(VungleAdapterConfiguration.class.getName(), configuration).build();
+                MoPub.initializeSdk(MainActivity.this, sdkConfiguration, new SdkInitializationListener() {
+                    @Override
+                    public void onInitializationFinished() {
+                        Log.d(TAG,"onInitializationFinished");
+                    }
+                });
             }
-        });
+
+            @Override
+            public void onError(VungleException e) {
+
+            }
+
+            @Override
+            public void onAutoCacheAdAvailable(String placementId) {
+                // Callback to notify when an ad becomes available for the cache optimized placement
+                // NOTE: This callback works only for the cache optimized placement. Otherwise, please use
+                // LoadAdCallback with loadAd API for loading placements.
+            }
+        }, vungleSettings);
+
+
 
         mInterstitial = new MoPubInterstitial(MainActivity.this, interstitialPlacementId);
         vungleMediationConfiguration = new VungleMediationConfiguration.Builder()
                 .withAutoRotate(AdConfig.LANDSCAPE)
                 .withStartMuted(true)
                 .withOrdinalViewCount(10)
-                .withUserId("IE-Vincent")
+                .withUserId("IE-Allen")
                 .withCancelDialogBody("CUSTOM_BODY")
                 .withCancelDialogCloseButton("CUSTOM_CLOSE")
                 .withCancelDialogKeepWatchingButton("CUSTOM_KEEPWATCHING")
