@@ -39,9 +39,13 @@ dependencies {
         transitive = true
     }
 
-    implementation 'com.vungle:publisher-sdk-android:6.8.1'
+    implementation files('libs/vungle-android-sdk-6.10.1.aar')
+    implementation files('libs/mopub-vungle-adapters-6.10.1.0.aar')
 
-    implementation 'com.mopub.mediation:vungle:6.8.1.0'
+
+    // Required Third-party Dependencies
+    implementation files('libs/okhttp-3.12.12.jar')
+    implementation files('libs/okio-1.15.0.jar')
 
 
 }

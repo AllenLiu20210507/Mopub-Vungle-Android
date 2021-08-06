@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void init() {
         Map<String, String> vungleSettings = new HashMap<>();
 //        vungleSettings.put("VNG_DEVICE_ID_OPT_OUT", "true");
-        vungleSettings.put("appId", "56e0df40945f181a3c000012");
+        vungleSettings.put("appId", "60f7f117c7659cdfd5fa18cb");
 //        vungleSettings.put("VNG_MIN_SPACE_INIT", "99999999999");
 //        vungleSettings.put("VNG_MIN_SPACE_LOAD_AD", "99999999999");
 
