@@ -89,13 +89,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         vungleRouter.updateConsentStatus(Vungle.Consent.OPTED_IN);
 
         VungleSettings vungleSettings = vungleRouter.applyVungleNetworkSettings(configuration);
-        Vungle.init("YOUR_VUNGLE_APP_ID", getApplicationContext(), new InitCallback() {
+        Vungle.init("60506898046a3bd42c88ba73", getApplicationContext(), new InitCallback() {
             @Override
             public void onSuccess() {
                 // Initialization has succeeded and SDK is ready to load an ad or play one if there
                 // is one pre-cached already
-                SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder("YOUR_MOPUB_ADUNIT_ID")
-                        .withMediatedNetworkConfiguration(VungleAdapterConfiguration.class.getName(), configuration).build();
+                Map<String, String> vungleSettings = new HashMap<>();
+//        vungleSettings.put("VNG_DEVICE_ID_OPT_OUT", "true");
+//        vungleSettings.put("appId", "4245959c24b949a38eac210daa87724d");
+//        vungleSettings.put("VNG_MIN_SPACE_INIT", "99999999999");
+//        vungleSettings.put("VNG_MIN_SPACE_LOAD_AD", "99999999999");
+
+                SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(rewardPlacementId)
+                        .withMediatedNetworkConfiguration(VungleAdapterConfiguration.class.getName(), vungleSettings)
+                        .withLogLevel(MoPubLog.LogLevel.DEBUG)
+                        .withLegitimateInterestAllowed(false)
+                        .build();
                 MoPub.initializeSdk(MainActivity.this, sdkConfiguration, new SdkInitializationListener() {
                     @Override
                     public void onInitializationFinished() {
